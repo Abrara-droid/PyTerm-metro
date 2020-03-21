@@ -29,6 +29,12 @@ class NumberInput():
                 'texto':textBlock
             }
         '''
+        
+    def on_event(self, event):
+        if event.type == KEYDOWN:
+            if event.isdigit()
+        pass
+    
     def value(self, val=None):
         if val==None:
             return self.__value
@@ -92,7 +98,7 @@ class NumberInput():
             return self.__position
         else:
             try:
-                self.__position = int(val)
+                self.__position = [int(val)[0], int(val[1])]
             except:
                 pass
 
@@ -122,6 +128,9 @@ class mainApp():
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.__on_close()
+                
+                self.entrada.on_event(event)    
+
             # Pintamos el termometro en su posicion
             self.__screen.blit(self.termometro.custome, (50,34))
             
