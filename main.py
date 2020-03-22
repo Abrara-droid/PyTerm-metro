@@ -6,8 +6,8 @@ class Termometro():
         self.custome = pygame.image.load("images/termo1.png")
 
 class NumberInput():
-    __value = 0
-    __strValue = '0'
+    __value = 0 #Valor real con el que se hacen los calculos
+    __strValue = '0' #Solo es el numero que aparece en la pantalla
     __position = [0, 0]
     __size = [0,0]
     
@@ -34,8 +34,12 @@ class NumberInput():
         if event.type == KEYDOWN:
             if event.unicode.isdigit() and len(self.__strValue) < 10:
                 self.__strValue += event.unicode
+                self.value(self.__strValue)
+                print(self.__strValue, self.__value)
             elif event.key == K_BACKSPACE:
-                self.__strValue = self.__strValue[0:-1]
+                self.__strValue = self.__strValue[:-1]
+                self.value(self.__strValue)
+                print(self.__strValue, self.__value)
     
     def value(self, val=None):
         if val==None:
