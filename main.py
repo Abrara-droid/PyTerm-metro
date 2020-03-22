@@ -32,8 +32,10 @@ class NumberInput():
         
     def on_event(self, event):
         if event.type == KEYDOWN:
-            if event.isdigit()
-        pass
+            if event.unicode.isdigit() and len(self.__strValue) < 10:
+                self.__strValue += event.unicode
+            elif event.key == K_BACKSPACE:
+                self.__strValue = self.__strValue[0:-1]
     
     def value(self, val=None):
         if val==None:
