@@ -5,9 +5,27 @@ class Termometro():
     def __init__(self):
         self.custome = pygame.image.load("images/termo1.png")
 
+
+class Selector():
+    __tipoUnidad = None
+    
+    def __init__(self, unidad="C"):
+        self.__customes = []
+        self.__customes.append(pygame.image.load("images/selectorF.png"))
+        self.__customes.append(pygame.image.load("images/selectorC.png"))
+        
+        self.__tipoUnidad = unidad
+        
+    def custome(self):
+        if self.__tipoUnidad == 'F':
+            return self.__customes[0]
+        else:
+            return self.__customes[1]
+
+
 class NumberInput():
     __value = 0 #Valor real con el que se hacen los calculos
-    __strValue = '0' #Solo es el numero que aparece en la pantalla
+    __strValue = '' #Solo es el numero que aparece en la pantalla
     __position = [0, 0]
     __size = [0,0]
     
@@ -120,9 +138,12 @@ class mainApp():
         self.__screen.fill((244,236,203))
         
         self.termometro = Termometro()
+        
         self.entrada = NumberInput()
-        self.entrada.pos((106, 58))
+        self.entrada.pos((133, 58))
         self.entrada.size((133, 28))
+        
+        self.selector = Selector()
         
     def __on_close(self):
         pygame.quit()
@@ -138,12 +159,15 @@ class mainApp():
                 self.entrada.on_event(event)    
 
             # Pintamos el termometro en su posicion
-            self.__screen.blit(self.termometro.custome, (50,34))
+            self.__screen.blit(self.termometro.custome, (50, 33))
             
             #Pintamos cuadro de texto
             text = self.entrada.render() #Obtenemos rectangulo blanco y foto de texto y lo asignamos a text
             pygame.draw.rect(self.__screen, (255,255,255), text[0]) #Creamos el rectangulo blanco con sus datos (posicion y tamaño) text[0]
             self.__screen.blit(text[1], self.entrada.pos()) #Pintamos la foto del texto (text[1])
+            
+            #Pintamos el selector
+            self.__screen.blit(self.selector.custome(), (112, 153))
             
             pygame.display.flip()
             
