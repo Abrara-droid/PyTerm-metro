@@ -22,6 +22,13 @@ class Selector():
         else:
             return self.__customes[1]
 
+    def on_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.__tipoUnidad == 'F':
+                self.__tipoUnidad = 'C'
+            else:
+                self.__tipoUnidad = 'F'
+
 
 class NumberInput():
     __value = 0 #Valor real con el que se hacen los calculos
@@ -122,7 +129,7 @@ class NumberInput():
             return self.__position
         else:
             try:
-                self.__position = [int(val)[0], int(val[1])]
+                self.__position = [int(val[0]), int(val[1])]
             except:
                 pass
 
@@ -140,7 +147,7 @@ class mainApp():
         self.termometro = Termometro()
         
         self.entrada = NumberInput()
-        self.entrada.pos((133, 58))
+        self.entrada.pos((106, 58))
         self.entrada.size((133, 28))
         
         self.selector = Selector()
@@ -156,10 +163,14 @@ class mainApp():
                 if event.type == QUIT:
                     self.__on_close()
                 
-                self.entrada.on_event(event)    
-
+                self.entrada.on_event(event)
+                
+                self.selector.on_event(event)
+            #Pintamos el fondo de pantalla    
+            self.__screen.fill((244, 236, 203))
+            
             # Pintamos el termometro en su posicion
-            self.__screen.blit(self.termometro.custome, (50, 33))
+            self.__screen.blit(self.termometro.custome, (50, 34))
             
             #Pintamos cuadro de texto
             text = self.entrada.render() #Obtenemos rectangulo blanco y foto de texto y lo asignamos a text
