@@ -4,6 +4,17 @@ from pygame.locals import *
 class Termometro():
     def __init__(self):
         self.custome = pygame.image.load("images/termo1.png")
+        
+    def convertir(self, grados, toUnidad):
+        resultado = 0
+        if toUnidad == 'F':
+            resultado = grados * 9/5 + 32
+        elif toUnidad == 'C':
+            resultado = (grados - 32) * 5/9
+        else:
+            resultado = grados
+        
+        return "{:10.2f}".format(resultado)
 
 
 class Selector():
@@ -22,12 +33,14 @@ class Selector():
         else:
             return self.__customes[1]
 
-    def on_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.__tipoUnidad == 'F':
-                self.__tipoUnidad = 'C'
-            else:
-                self.__tipoUnidad = 'F'
+    def unidad(self):
+        return self.__tipoUnidad
+
+    def change(self):
+        if self.__tipoUnidad == 'F':
+            self.__tipoUnidad = 'C'
+        else:
+            self.__tipoUnidad = 'F'
 
 
 class NumberInput():
@@ -35,6 +48,7 @@ class NumberInput():
     __strValue = '' #Solo es el numero que aparece en la pantalla
     __position = [0, 0]
     __size = [0,0]
+    __pointsCount = 0
     
     def __init__(self, value=0):
         self.__font = pygame.font.SysFont("Arial", 24)
@@ -57,25 +71,32 @@ class NumberInput():
         
     def on_event(self, event):
         if event.type == KEYDOWN:
-            if event.unicode.isdigit() and len(self.__strValue) < 10:
+            if event.unicode.isdigit() and len(self.__strValue) < 10 or (event.unicode == "." and self.__pointsCount == 0):
                 self.__strValue += event.unicode
                 self.value(self.__strValue)
-                print(self.__strValue, self.__value)
+                if event.unicode == ".":
+                    self.__pointsCount += 1
             elif event.key == K_BACKSPACE:
+                if self.__strValue[-1] == ".":
+                    self.__pointsCount -= 1
                 self.__strValue = self.__strValue[:-1]
                 self.value(self.__strValue)
-                print(self.__strValue, self.__value)
     
     def value(self, val=None):
         if val==None:
             return self.__value
         else:
             val = str(val)
+            print(val, "cadena")
             try:
-                self.__value = int(val)
+                self.__value = float(val)
                 self.__strValue = val
+                if '.' in self.__strValue:
+                    self.__pointsCount = 1
+                else:
+                    self.__pointsCount = 0
             except:
-                pass
+                print("Se ha producido un error")
             
     def width(self, val=None):
         if val == None:
@@ -165,7 +186,13 @@ class mainApp():
                 
                 self.entrada.on_event(event)
                 
-                self.selector.on_event(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.selector.change()
+                    grados = self.entrada.value()
+                    nuevaUnidad = self.selector.unidad()
+                    temperatura = self.termometro.convertir(grados, nuevaUnidad)
+                    self.entrada.value(temperatura)
+                    
             #Pintamos el fondo de pantalla    
             self.__screen.fill((244, 236, 203))
             
